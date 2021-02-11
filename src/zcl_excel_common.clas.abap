@@ -1065,6 +1065,8 @@ METHOD shift_formula.
               lv_abscol                       TYPE string,    " Absolute column symbol
               lv_absrow                       TYPE string,    " Absolute row symbol
               lv_level                        TYPE i,         " Level of groups [..[..]..] or {..}
+              lv_compare_1                    TYPE string,
+              lv_compare_2                    TYPE string,
 
               lv_errormessage                 TYPE string.
 
@@ -1249,21 +1251,16 @@ METHOD shift_formula.
         ENDIF.
 
         " Is valid column & row ?
-        DO 1 TIMES.
-          CHECK lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
-          DATA lv_compare_1 TYPE string.
-          DATA lv_compare_2 TYPE string.
-
+        IF lv_tcol1 IS NOT INITIAL AND lv_trow1 IS NOT INITIAL.
           " COLUMN + ROW
           CONCATENATE lv_tcol1 lv_trow1 INTO lv_compare_1.
-
           " Original condensed string
           lv_compare_2 = lv_ref_cell_addr.
           CONDENSE lv_compare_2.
-
-          CHECK lv_compare_1 <> lv_compare_2.
-          CLEAR: lv_trow1, lv_tchar2.
-        ENDDO.
+          IF lv_compare_1 <> lv_compare_2.
+            CLEAR: lv_trow1, lv_tchar2.
+          ENDIF.
+        ENDIF.
 
 *--------------------------------------------------------------------*
 * Check for invalid cell address
